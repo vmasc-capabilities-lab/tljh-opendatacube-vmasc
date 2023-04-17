@@ -8,48 +8,48 @@ import logging
 logger = logging.getLogger("tljh")
 
 
-def setup_database_for_datacube():
-    logger.info('Setting up the Postgresql DB for the Open Data Cube...')
+# def setup_database_for_datacube():
+#     logger.info('Setting up the Postgresql DB for the Open Data Cube...')
 
-    # enable then restart teh service
-    sh.systemctl("enable", "postgresql")
-    sh.service("postgresql", "restart")
+#     # enable then restart teh service
+#     sh.systemctl("enable", "postgresql")
+#     sh.service("postgresql", "restart")
 
-    su_postgres = sh.su.bake("-", "postgres", "-c")  # preamble
+#     su_postgres = sh.su.bake("-", "postgres", "-c")  # preamble
 
-    # create database + extension
-    su_postgres("psql -c \'CREATE EXTENSION postgis;\'")
-    su_postgres(f"psql -c \'CREATE DATABASE {os.getenv('ODC_DB_NAME', 'datacube')};\'")
+#     # create database + extension
+#     su_postgres("psql -c \'CREATE EXTENSION postgis;\'")
+#     su_postgres(f"psql -c \'CREATE DATABASE {os.getenv('ODC_DB_NAME', 'datacube')};\'")
 
-    # set a pw for the postgres db user
-    su_postgres(f"psql -c \"ALTER USER {os.getenv('POSTGRES_DB_USER', 'postgres')} PASSWORD \'{os.getenv('POSTGRES_DB_PASS', 'superPassword')}\';\"")
+#     # set a pw for the postgres db user
+#     su_postgres(f"psql -c \"ALTER USER {os.getenv('POSTGRES_DB_USER', 'postgres')} PASSWORD \'{os.getenv('POSTGRES_DB_PASS', 'superPassword')}\';\"")
 
-    # initialize the datacube
-    su_postgres(f"source /opt/tljh/user/bin/activate && DB_HOSTNAME={os.getenv('PSQL_HOST', 'localhost')} DB_USERNAME={os.getenv('POSTGRES_DB_USER', 'postgres')} DB_PASSWORD={os.getenv('POSTGRES_DB_PASS', 'superPassword')} DB_DATABASE={os.getenv('ODC_DB_NAME', 'datacube')} datacube -v system init")
+#     # initialize the datacube
+#     su_postgres(f"source /opt/tljh/user/bin/activate && DB_HOSTNAME={os.getenv('PSQL_HOST', 'localhost')} DB_USERNAME={os.getenv('POSTGRES_DB_USER', 'postgres')} DB_PASSWORD={os.getenv('POSTGRES_DB_PASS', 'superPassword')} DB_DATABASE={os.getenv('ODC_DB_NAME', 'datacube')} datacube -v system init")
 
-    # create an admin role in the odc db
-    su_postgres(f"psql -c \"CREATE ROLE {os.getenv('ODC_DB_ADMIN_USER', 'odc_db_admin')} WITH LOGIN IN ROLE agdc_admin, agdc_user ENCRYPTED PASSWORD \'{os.getenv('ODC_DB_ADMIN_PASS', 'insecurePassword')}\';\"")
+#     # create an admin role in the odc db
+#     su_postgres(f"psql -c \"CREATE ROLE {os.getenv('ODC_DB_ADMIN_USER', 'odc_db_admin')} WITH LOGIN IN ROLE agdc_admin, agdc_user ENCRYPTED PASSWORD \'{os.getenv('ODC_DB_ADMIN_PASS', 'insecurePassword')}\';\"")
 
-    # create user role in the odc db 
-    su_postgres(f"psql -c \"CREATE ROLE {os.getenv('ODC_DB_READ_ONLY_USER', 'odc_db_user')} WITH LOGIN IN ROLE agdc_user ENCRYPTED PASSWORD \'{os.getenv('ODC_DB_READ_ONLY_PASS', 'worrysomePassword')}\';\"")
-    su_postgres(f"psql -c \'ALTER DATABASE {os.getenv('ODC_DB_NAME', 'datacube')} OWNER TO {os.getenv('ODC_DB_ADMIN_USER', 'odc_db_admin')};\'")
+#     # create user role in the odc db 
+#     su_postgres(f"psql -c \"CREATE ROLE {os.getenv('ODC_DB_READ_ONLY_USER', 'odc_db_user')} WITH LOGIN IN ROLE agdc_user ENCRYPTED PASSWORD \'{os.getenv('ODC_DB_READ_ONLY_PASS', 'worrysomePassword')}\';\"")
+#     su_postgres(f"psql -c \'ALTER DATABASE {os.getenv('ODC_DB_NAME', 'datacube')} OWNER TO {os.getenv('ODC_DB_ADMIN_USER', 'odc_db_admin')};\'")
 
-def setup_odc_gee():
-    logger.info('Setting up the odc-gee plugin...')
-    os.system('git clone https://github.com/ceos-seo/odc-gee.git')
-    os.system('sudo -E /opt/tljh/user/bin/python -m pip install -e odc-gee')
+# def setup_odc_gee():
+#     logger.info('Setting up the odc-gee plugin...')
+#     os.system('git clone https://github.com/ceos-seo/odc-gee.git')
+#     os.system('sudo -E /opt/tljh/user/bin/python -m pip install -e odc-gee')
 
 
-def setup_shared_directory():
-    shared_dir = '/srv/shared'
-    logger.info('Setting up a shared directory...')
-    sh.mkdir(shared_dir, '-p')  # make a shared folder
-    ensure_group('jupyterhub-users')  # create teh user group since no one's logged in yet
-    sh.chown('root:jupyterhub-users', shared_dir)  # let the group own it
-    sh.chmod('777', shared_dir)  # allow everyone access
-    sh.chmod('g+s', shared_dir)  # set group id
-    os.system('rm -rf /etc/skel/shared/shared')  # reinstall compatability
-    sh.ln('-s',  shared_dir, '/etc/skel/shared')  # symlink
+# def setup_shared_directory():
+#     shared_dir = '/srv/shared'
+#     logger.info('Setting up a shared directory...')
+#     sh.mkdir(shared_dir, '-p')  # make a shared folder
+#     ensure_group('jupyterhub-users')  # create teh user group since no one's logged in yet
+#     sh.chown('root:jupyterhub-users', shared_dir)  # let the group own it
+#     sh.chmod('777', shared_dir)  # allow everyone access
+#     sh.chmod('g+s', shared_dir)  # set group id
+#     os.system('rm -rf /etc/skel/shared/shared')  # reinstall compatability
+#     sh.ln('-s',  shared_dir, '/etc/skel/shared')  # symlink
 
 @hookimpl
 def tljh_extra_user_conda_packages():
@@ -119,40 +119,40 @@ def tljh_extra_apt_packages():
         # 'htop',
     ]
 
-@hookimpl
-def tljh_custom_jupyterhub_config(c):
-    """
-    Provide custom traitlet based config to JupyterHub.
-    Anything you can put in `jupyterhub_config.py` can
-    be here.
-    """
-    c.Spawner.default_url = '/lab'  # default to jupyter lab
+# @hookimpl
+# def tljh_custom_jupyterhub_config(c):
+#     """
+#     Provide custom traitlet based config to JupyterHub.
+#     Anything you can put in `jupyterhub_config.py` can
+#     be here.
+#     """
+#     c.Spawner.default_url = '/lab'  # default to jupyter lab
 
-@hookimpl
-def tljh_config_post_install(config):
-    """
-    Configure shared directory and change config mods
-     - src: https://github.com/kafonek/tljh-shared-directory/blob/master/tljh_shared_directory.py
-    """
-    setup_shared_directory()
+# @hookimpl
+# def tljh_config_post_install(config):
+#     """
+#     Configure shared directory and change config mods
+#      - src: https://github.com/kafonek/tljh-shared-directory/blob/master/tljh_shared_directory.py
+#     """
+#     setup_shared_directory()
 
-@hookimpl
-def tljh_post_install():
-    """
-    Executes after installation and all the other hooks. Used to configure the postgres database for datacube
-    """
-    # pull in secrets and settings
-    from dotenv import dotenv_values
-    env = { **dotenv_values(".env") }
+# @hookimpl
+# def tljh_post_install():
+#     """
+#     Executes after installation and all the other hooks. Used to configure the postgres database for datacube
+#     """
+#     # pull in secrets and settings
+#     from dotenv import dotenv_values
+#     env = { **dotenv_values(".env") }
 
-    for k in env.keys():
-        try:
-            os.environ[k]
-        except KeyError:
-            os.environ[k] = env[k]
+#     for k in env.keys():
+#         try:
+#             os.environ[k]
+#         except KeyError:
+#             os.environ[k] = env[k]
 
-    setup_database_for_datacube()
-    setup_odc_gee()
+#     setup_database_for_datacube()
+#     setup_odc_gee()
 
 
 @hookimpl
