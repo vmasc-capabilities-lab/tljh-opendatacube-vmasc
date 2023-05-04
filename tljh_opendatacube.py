@@ -89,29 +89,29 @@ def tljh_extra_user_pip_packages():
         # '--no-binary=Cython,rasterio,Shapely,pygeos,netCDF4,pyproj,fc,hdstats,lmdb,lxml,numexpr,pyzmq,msgpack,ruamel.yaml.clib,zstandard'
     ]
 
-@hookimpl
-def tljh_extra_hub_pip_packages():
-    """
-    Return list of extra pip packages to install in the hub environment.
-    """
-    return [
-        'python-dotenv'
-    ]
+#@hookimpl
+#def tljh_extra_hub_pip_packages():
+#    """
+#    Return list of extra pip packages to install in the hub environment.
+#    """
+    #return [
+        # 'python-dotenv'
+    #]
 
 @hookimpl
 def tljh_extra_apt_packages():
     return [
-        'git',
-        'unzip',
-        'zip',
-        'libpq-dev',
-        'libgdal-dev',
-        'libhdf5-dev',
-        'libnetcdf-dev',
-        'python3-dev',
-        'postgresql',
-        'postgresql-contrib',
-        'postgis',
+        # 'git',
+        # 'unzip',
+        # 'zip',
+        # 'libpq-dev',
+        # 'libgdal-dev',
+        # 'libhdf5-dev',
+        #'libnetcdf-dev',
+        #'python3-dev',
+        # 'postgresql',
+        # 'postgresql-contrib',
+        # 'postgis',
         # already on ec2:
         # 'wget',
         # 'less',
