@@ -98,9 +98,9 @@ def tljh_extra_user_pip_packages():
         # 'python-dotenv'
     #]
 
-@hookimpl
-def tljh_extra_apt_packages():
-    return [
+#@hookimpl
+#def tljh_extra_apt_packages():
+#    return [
         # 'git',
         # 'unzip',
         # 'zip',
@@ -117,7 +117,7 @@ def tljh_extra_apt_packages():
         # 'less',
         # 'vim',
         # 'htop',
-    ]
+#    ]
 
 # @hookimpl
 # def tljh_custom_jupyterhub_config(c):
