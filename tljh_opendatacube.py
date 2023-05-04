@@ -51,43 +51,43 @@ logger = logging.getLogger("tljh")
 #     os.system('rm -rf /etc/skel/shared/shared')  # reinstall compatability
 #     sh.ln('-s',  shared_dir, '/etc/skel/shared')  # symlink
 
-@hookimpl
-def tljh_extra_user_conda_packages():
-    return [
-        'gdal',
-        'geopandas',
-        'datacube',
-        'Cython',
-        'matplotlib',
-        'seaborn',
-        'folium',
-        'scipy',
-        'scikit-image',
-        'tqdm',
-        'python-dateutil',
-        ]
+# @hookimpl
+# def tljh_extra_user_conda_packages():
+#     return [
+#         'gdal',
+#         'geopandas',
+#         'datacube',
+#         'Cython',
+#         'matplotlib',
+#         'seaborn',
+#         'folium',
+#         'scipy',
+#         'scikit-image',
+#         'tqdm',
+#         'python-dateutil',
+#         ]
 
-@hookimpl
-def tljh_extra_user_pip_packages():
-    return [
-        '--extra-index-url=https://packages.dea.ga.gov.au',
-        'odc_algo[hdstats]',
-        'odc_ui',
-        'odc_index',
-        'odc_aws',
-        'odc_geom',
-        'odc_io',
-        'odc_aio',
-        'odc_dscache',
-        'odc_dtools',
-        'odc-apps-dc-tools',
-        'odc-apps-cloud',
-        'odc_ppt',
-        'eodatasets3',
-        'datacube-stats',
-        'python-dotenv'
-        # '--no-binary=Cython,rasterio,Shapely,pygeos,netCDF4,pyproj,fc,hdstats,lmdb,lxml,numexpr,pyzmq,msgpack,ruamel.yaml.clib,zstandard'
-    ]
+# @hookimpl
+# def tljh_extra_user_pip_packages():
+#     return [
+#         '--extra-index-url=https://packages.dea.ga.gov.au',
+#         'odc_algo[hdstats]',
+#         'odc_ui',
+#         'odc_index',
+#         'odc_aws',
+#         'odc_geom',
+#         'odc_io',
+#         'odc_aio',
+#         'odc_dscache',
+#         'odc_dtools',
+#         'odc-apps-dc-tools',
+#         'odc-apps-cloud',
+#         'odc_ppt',
+#         'eodatasets3',
+#         'datacube-stats',
+#         'python-dotenv'
+#         # '--no-binary=Cython,rasterio,Shapely,pygeos,netCDF4,pyproj,fc,hdstats,lmdb,lxml,numexpr,pyzmq,msgpack,ruamel.yaml.clib,zstandard'
+#     ]
 
 #@hookimpl
 #def tljh_extra_hub_pip_packages():
